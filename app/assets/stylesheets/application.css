@@ -13,3 +13,8 @@
  *= require_tree .
  *= require_self
  */
+ 
+/* Styling for highlighting column header */ 
+#movies .hilite {
+  background-color: yellow;
+}

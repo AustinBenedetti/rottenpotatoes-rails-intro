@@ -11,7 +11,32 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+    
+    #get movies with selected ratings then handle displaying
+    
+    @all_ratings = Movie.get_ratings()
+    @selected_ratings = params[:ratings]
+    
+    
+    
+    # Source for dynamic header changes
+    # https://stackoverflow.com/questions/9646815/conditionally-setting-css-style-from-ruby-controller
+    sort_flag = params[:sort_by] || session[:sort_by]
+    if sort_flag == 'title'
+      ordering = {:title => :asc}
+      @title_header = 'hilite'
+      @movies = Movie.order(ordering).all
+    elsif sort_flag == 'release_date'
+      ordering = {:release_date => :asc}
+      @date_header = 'hilite'
+      @movies = Movie.order(ordering).all
+    else
+      @movies = Movie.all
+    end
+      
+    
+    #gets movie ratings from model
+    #@movies = Movie.order(ordering).all
   end
 
   def new
