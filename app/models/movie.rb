@@ -6,6 +6,7 @@ class Movie < ActiveRecord::Base
     return ratings
   end
   
+  # return checked rating keys
   def self.with_ratings ratings
     where(rating: ratings.keys)
   end

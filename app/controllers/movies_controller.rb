@@ -19,21 +19,17 @@ class MoviesController < ApplicationController
     
     # Source for dynamic header changes
     # https://stackoverflow.com/questions/9646815/conditionally-setting-css-style-from-ruby-controller
-    sort_flag = params[:sort_by] #|| session[:sort_by] # TODO: UNDO FOR MEMORY
+    sort_flag = params[:sort_by] || session[:sort_by] 
     if sort_flag == 'title'
       ordering = {:title => :asc}
       @title_header = 'hilite'
-      #@movies = Movie.order(ordering).all
     elsif sort_flag == 'release_date'
       ordering = {:release_date => :asc}
       @date_header = 'hilite'
-      #@movies = Movie.order(ordering).all
-    else
-      #@movies = Movie.all
     end
       
     # store session hash for refresh
-    # session[:sort_by] = sort_flag
+    session[:sort_by] = sort_flag
     session[:ratings] = @selected_ratings
     
     @movies = Movie.with_ratings(@selected_ratings).order(ordering)
