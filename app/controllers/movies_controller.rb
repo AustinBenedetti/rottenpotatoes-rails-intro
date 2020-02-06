@@ -10,18 +10,16 @@ class MoviesController < ApplicationController
     # will render app/views/movies/show.<extension> by default
   end
 
-  def index
+  def index 
     
     #get movies with selected ratings then handle displaying
-    
     @all_ratings = Movie.get_ratings()
-    @selected_ratings = params[:ratings]
-    
-    
+    @selected_ratings = params[:ratings] #|| session[:ratings] # TODO: UNDO FOR MEMORY
+
     
     # Source for dynamic header changes
     # https://stackoverflow.com/questions/9646815/conditionally-setting-css-style-from-ruby-controller
-    sort_flag = params[:sort_by] || session[:sort_by]
+    sort_flag = params[:sort_by] #|| session[:sort_by] # TODO: UNDO FOR MEMORY
     if sort_flag == 'title'
       ordering = {:title => :asc}
       @title_header = 'hilite'
@@ -34,9 +32,11 @@ class MoviesController < ApplicationController
       @movies = Movie.all
     end
       
+    # store session hash for refresh
+    # session[:sort_by] = sort_flag
+    # session[:ratings] = @selected_ratings
     
-    #gets movie ratings from model
-    #@movies = Movie.order(ordering).all
+    
   end
 
   def new
