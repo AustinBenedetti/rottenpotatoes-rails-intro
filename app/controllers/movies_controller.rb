@@ -12,10 +12,7 @@ class MoviesController < ApplicationController
 
   def index 
     
-    #get movies with selected ratings then handle displaying
-    @all_ratings = Movie.get_ratings()
-    @selected_ratings = params[:ratings] || session[:ratings]
-
+    #session.clear
     
     # Source for dynamic header changes
     # https://stackoverflow.com/questions/9646815/conditionally-setting-css-style-from-ruby-controller
@@ -27,10 +24,38 @@ class MoviesController < ApplicationController
       ordering = {:release_date => :asc}
       @date_header = 'hilite'
     end
+    
+        
+    #get movies with selected ratings then handle displaying
+    @all_ratings = Movie.get_ratings()
+    @selected_ratings = params[:ratings] || session[:ratings] || {}
+    
+    # account for no cookies condition, display all for default
+    if @selected_ratings == {}
+      @selected_ratings = Hash.new
+      @all_ratings.each do |current_rating|
+        @selected_ratings[current_rating] = 1
+      end
+    end
       
-    # store session hash for refresh
-    session[:sort_by] = sort_flag
-    session[:ratings] = @selected_ratings
+    # flag to check for redirect  
+    redirect_flag = false
+    
+    # check for redirect
+    if session[:sort_by] != params[:sort_by]
+      session[:sort_by] = sort_flag
+      redirect_flag = true
+    end  
+    
+    if session[:ratings] != params[:ratings]
+      session[:ratings] = @selected_ratings
+      redirect_flag = true
+    end 
+    
+    if redirect_flag == true
+      flash.keep
+      redirect_to :sort_by => sort_flag, :ratings => @selected_ratings and return
+    end
     
     @movies = Movie.with_ratings(@selected_ratings).order(ordering)
     
