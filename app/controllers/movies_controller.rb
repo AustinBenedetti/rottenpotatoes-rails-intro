@@ -12,7 +12,7 @@ class MoviesController < ApplicationController
 
   def index 
     
-    #session.clear
+    #session.clear # For debug
     
     # Source for dynamic header changes
     # https://stackoverflow.com/questions/9646815/conditionally-setting-css-style-from-ruby-controller
